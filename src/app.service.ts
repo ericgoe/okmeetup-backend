@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { identity } from 'rxjs'
 import { Repository } from 'typeorm'
 import { Event } from './entities/event.entity'
 import { Participant } from './entities/participant.entity'
@@ -25,5 +26,31 @@ export class AppService {
         )
 
         return savedParticipant
+    }
+
+    async createEvent(){
+
+        let newEvent: Event = null;
+        let eventIdNotAvailable: boolean;
+
+        while(newEvent == null || eventIdNotAvailable){
+
+        newEvent = new Event();
+
+        const numberOfEventsWithNewEventId = await this.eventRepository.count({
+            where: {
+                id: newEvent.id
+            }
+        });
+
+        if (numberOfEventsWithNewEventId > 0){
+            eventIdNotAvailable = true;
+        }
+        else eventIdNotAvailable = false;
+    }
+
+        const savedEvent = await this.eventRepository.save(newEvent);
+
+        return savedEvent;
     }
 }

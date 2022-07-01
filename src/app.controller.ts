@@ -9,4 +9,9 @@ export class AppController {
     registerParticipant() {
         return this.appService.registerParticipant()
     }
+
+    @Post('/event')
+    createEvent() {
+        return this.appService.createEvent();
+    }
 }

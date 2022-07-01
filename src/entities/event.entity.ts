@@ -14,4 +14,25 @@ export class Event {
         nullable: true,
     })
     decidedTime: null | Date
+
+    idLength: number = 6;
+
+    constructor(){
+        this.id = this.generateRandomString();
+    }
+
+ 
+    generateRandomString(): string {
+        let outString: string = '';
+        let inOptions: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    
+        for (let i = 0; i < this.idLength; i++) {
+    
+          outString += inOptions.charAt(Math.floor(Math.random() * inOptions.length));
+    
+        }
+    
+        return outString;
+      }
+    
 }
