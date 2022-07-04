@@ -55,13 +55,25 @@ export class AppService {
         return savedEvent;
     }
 
+    async getEvent(id: string){
+        try{
+            return await this.eventRepository.findOneByOrFail({
+                id: id
+            });
+        }
+        catch {
+            throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+        }
+    }
+
     private async getParticipant(participantId: string){
-        let participant = await this.participantRepository.findOneBy({
+        try{
+            return await this.participantRepository.findOneByOrFail({
             id: participantId
         })
+    } catch{
+        throw new HttpException('Participant not registered', HttpStatus.NOT_FOUND);
+    }
 
-        if (participant === null)
-            throw new HttpException('Participant not registered', HttpStatus.NOT_FOUND);
-        else return participant;
     }
 }
