@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common'
+import { Controller, Post, Param, ParseUUIDPipe} from '@nestjs/common'
 import { AppService } from './app.service'
 
 @Controller()
@@ -10,8 +10,9 @@ export class AppController {
         return this.appService.registerParticipant()
     }
 
-    @Post('/event')
-    createEvent() {
-        return this.appService.createEvent();
+    @Post('/event/:participantId')
+    createEvent(@Param('participantId', ParseUUIDPipe) participantId : string) {
+        return this.appService.createEvent(participantId);
     }
+
 }

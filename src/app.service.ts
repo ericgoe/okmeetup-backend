@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { identity } from 'rxjs'
 import { Repository } from 'typeorm'
 import { Event } from './entities/event.entity'
-import { Participant } from './entities/participant.entity'
+import {Participant } from './entities/participant.entity'
 import { PossibleAppointment } from './entities/possible-appointment.entity'
 
 @Injectable()
@@ -28,14 +28,15 @@ export class AppService {
         return savedParticipant
     }
 
-    async createEvent(){
+    async createEvent(participantId : string){
 
         let newEvent: Event = null;
         let eventIdNotAvailable: boolean;
+        let owner : Participant = await this.getParticipant(participantId);
 
         while(newEvent == null || eventIdNotAvailable){
 
-        newEvent = new Event();
+        newEvent = new Event(owner);
 
         const numberOfEventsWithNewEventId = await this.eventRepository.count({
             where: {
@@ -49,8 +50,18 @@ export class AppService {
         else eventIdNotAvailable = false;
     }
 
-        const savedEvent = await this.eventRepository.save(newEvent);
+        let savedEvent = await this.eventRepository.save(newEvent);
 
         return savedEvent;
+    }
+
+    private async getParticipant(participantId: string){
+        let participant = await this.participantRepository.findOneBy({
+            id: participantId
+        })
+
+        if (participant === null)
+            throw new HttpException('Participant not registered', HttpStatus.NOT_FOUND);
+        else return participant;
     }
 }
