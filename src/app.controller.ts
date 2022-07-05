@@ -1,5 +1,13 @@
-import { Controller, Post, Param, ParseUUIDPipe, Get} from '@nestjs/common'
+import {
+    Controller,
+    Post,
+    Param,
+    ParseUUIDPipe,
+    Get,
+    Body,
+} from '@nestjs/common'
 import { AppService } from './app.service'
+import { CreateEventDTO } from './dto/create-event.dto'
 
 @Controller()
 export class AppController {
@@ -11,13 +19,15 @@ export class AppController {
     }
 
     @Post('/event/:participantId')
-    createEvent(@Param('participantId', ParseUUIDPipe) participantId : string) {
-        return this.appService.createEvent(participantId);
+    createEvent(
+        @Param('participantId', ParseUUIDPipe) participantId: string,
+        @Body() body: CreateEventDTO,
+    ) {
+        return this.appService.createEvent(participantId, body)
     }
 
     @Get('/event/:id')
-    getEvent(@Param('id') id : string) {
-        return this.appService.getEvent(id);
+    getEvent(@Param('id') id: string) {
+        return this.appService.getEvent(id)
     }
-
 }
