@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CreateEventDTO } from './dto/create-event.dto'
+import { PossibleAppointmentDTO } from './dto/possible-appointment.dto'
 import { Event } from './entities/event.entity'
 import { Participant } from './entities/participant.entity'
 import { PossibleAppointment } from './entities/possible-appointment.entity'
@@ -51,6 +52,16 @@ export class AppService {
         const savedEvent = await this.eventRepository.save(newEvent)
 
         return savedEvent
+    }
+
+    async uploadPossibleAppointments(dto: PossibleAppointmentDTO) {
+        const possibleAppointment: PossibleAppointment =
+            new PossibleAppointment(dto)
+
+        const savedPossibleAppointment =
+            await this.possibleAppointmentRepository.save(possibleAppointment)
+
+        throw new Error('Method not implemented.')
     }
 
     async getEvent(id: string) {
