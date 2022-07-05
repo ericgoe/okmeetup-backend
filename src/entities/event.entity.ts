@@ -1,4 +1,12 @@
-import { Entity, PrimaryColumn, Column, ManyToMany, JoinTable, ManyToOne } from 'typeorm'
+import {
+    Entity,
+    PrimaryColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    ManyToOne,
+} from 'typeorm'
+import { CreateEventDTO } from '../dto/create-event.dto'
 import { Participant } from './participant.entity'
 
 @Entity()
@@ -18,25 +26,40 @@ export class Event {
     })
     decidedTime: null | Date
 
-    idLength: number = 6;
+    @Column()
+    title: string
 
-    constructor(owner: Participant) {
-        this.id = this.generateRandomString();
-        this.owner = owner;
+    @Column()
+    description: string
+
+    @Column()
+    startTimeSpan: Date
+
+    @Column()
+    endTimeSpan: Date
+
+    idLength = 6
+
+    constructor(owner: Participant, data: CreateEventDTO) {
+        this.id = this.generateRandomString()
+        this.owner = owner
+        this.title = data.title
+        this.description = data.description
+        this.startTimeSpan = data.startTimeSpan
+        this.endTimeSpan = data.endTimeSpan
     }
 
- 
     generateRandomString(): string {
-        let outString: string = '';
-        let inOptions: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    
+        let outString = ''
+        const inOptions =
+            'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
         for (let i = 0; i < this.idLength; i++) {
-    
-          outString += inOptions.charAt(Math.floor(Math.random() * inOptions.length));
-    
+            outString += inOptions.charAt(
+                Math.floor(Math.random() * inOptions.length),
+            )
         }
-    
-        return outString;
-      }
-    
+
+        return outString
+    }
 }
